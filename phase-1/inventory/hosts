@@ -1,0 +1,9 @@
+[all:vars]
+ansible_user=admin
+ansible_password=admin
+
+[lb]
+f5 ansible_host=10.1.1.151 private_ip=10.1.1.151 ansible_user=admin ansible_password=admin
+
+[ssh]
+10.1.1.151 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=default 
