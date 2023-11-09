@@ -33,7 +33,7 @@
         line: '#!/bin/bash'
 
     - name: "Run Script"
-      shell: bash /var/tmp/data_collection_script.sh > /var/tmp/{{filename}}
+      shell: bash /var/tmp/data_collection_script.sh > /opt/ansble/reports/{{filename}}
 
     - name: "Collect Script"
       fetch:
