@@ -38,6 +38,6 @@
     - name: "Collect Script"
       fetch:
         flat: true
-        dest: /opt/ansible/reports/{{filename}}
+        dest: /opt/ansible/{{filename}}
         src: /var/tmp/{{filename}}
 
