@@ -17,25 +17,23 @@
         trusted_checksum: "{{lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0}}"
 
 
-    - name: Get iso md5 hash
+    - name: Print trusted checksum
       debug:
-        msg: trusted_checksum
+        msg: '{{trusted_checksum}}'
 
     - name: Upload image to device
       bigip_software_image:
         image: '{{repo_path}}/{{f5_image}}'
         provider: "{{provider}}"
-        register: checksum
       delegate_to: localhost
-      failed_when: checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
 
     #- name: Verify Checksum
     #  failed_when: calc_checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
 
-    #- name: Get checksum
-    #  shell: md5sum /shared/images/{{f5_image}}
-    #  register: checksum
-    #  failed_when: checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
+    - name: Get checksum
+      shell: md5sum /shared/images/{{f5_image}}
+      register: calc_checksum
+      failed_when: calc_checksum.stdout.split(' ').0 != {{trusted_checksum}}
       
     - name: Print Checksums
       debug:
