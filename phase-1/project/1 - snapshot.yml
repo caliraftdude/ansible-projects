@@ -7,7 +7,7 @@
     # filename is built to hold the report name.  Its timestamped and designated with BEFORE which is used in comparison
     # script_file is the script that is echoed on the device and ran to collect information
     # data_file is the out of the script file or the report.  Note this goes to a mounted directory in the EE!  Important.
-    filename: "{{inventory_hostname}}-BEFORE-{{ lookup('pipe', 'date +%FT%H%MZ') }}.log"
+    filename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-BEFORE.log"
     script_file: "{{device_working_dir}}/data_collection_script.sh"
     data_file: "{{device_working_dir}}/{{filename}}"
 
