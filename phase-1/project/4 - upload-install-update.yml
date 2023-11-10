@@ -16,34 +16,25 @@
           no_f5_teem: false
         trusted_checksum: "{{lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0}}"
 
-
-    - name: Print trusted checksum
-      debug:
-        msg: '{{trusted_checksum}}'
-
     - name: Upload image to device
       bigip_software_image:
         image: '{{repo_path}}/{{f5_image}}'
         provider: "{{provider}}"
       delegate_to: localhost
-      register: checksum
-
-    #- name: Verify Checksum
-    #  failed_when: calc_checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
-    - name: Print calculated checksum
-      debug:
-        msg: '{{checksum.stdout}}'
-
+ 
     - name: Get checksum
-      shell: md5sum /shared/images/{{f5_image}}
+      bigip_command:
+        provider: "{{provider}}"
+        commands: 'run /util bash -c "md5sum /shared/images/{{f5_image}}"'
+      delegate_to: localhost
       register: calc_checksum
-      failed_when: calc_checksum.stdout.split(' ').0 != trusted_checksum
+      failed_when: calc_checksum.stdout.0.split(' ').0 != trusted_checksum
       
     - name: Print Checksums
       debug:
         msg: 
-          - "calulated md5sum is {{checksum.stdout.split(' ').0}}"
-          -  "trusted md5sum is {{lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0}}"
+          - "calulated md5sum is {{calc_checksum.stdout.0.split(' ').0}}"
+          -  "trusted md5sum is {{trusted_checksum}}"
 
     - name: Ensure an existing image is installed in specified volume
       bigip_software_install:
