@@ -24,9 +24,9 @@
       bigip_software_image:
         image: '{{repo_path}}/{{f5_image}}'
         provider: "{{provider}}"
-        register: calc_checksum
+        register: checksum
       delegate_to: localhost
-      failed_when: calc_checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
+      failed_when: checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
 
     #- name: Verify Checksum
     #  failed_when: calc_checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
@@ -39,7 +39,7 @@
     - name: Print Checksums
       debug:
         msg: 
-          - "calulated md5sum is {{calc_checksum.stdout.split(' ').0}}"
+          - "calulated md5sum is {{checksum.stdout.split(' ').0}}"
           -  "trusted md5sum is {{lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0}}"
 
     - name: Ensure an existing image is installed in specified volume
