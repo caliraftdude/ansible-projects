@@ -28,7 +28,8 @@
 
     - name: Wait for restart to complete
       uri:
-        url: "https://{{ ansible_host }}:443/mgmt/shared"
+        #url: "https://{{ ansible_host }}:443/mgmt/shared"
+        url: "https://{{ansible_host}}/tmui/login.jsp"
         method: GET
         status_code: 200
         timeout: 300
@@ -38,7 +39,8 @@
         password: "{{ ansible_password }}"
         validate_certs: false
       delegate_to: localhost
-      register: f5networks
-      until: f5networks is not failed
+      register: result
+      #until: f5networks is not failed
+      until: "result.status == 200"
       retries: 45
 
