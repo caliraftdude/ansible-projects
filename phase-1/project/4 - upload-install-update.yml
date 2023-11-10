@@ -30,10 +30,12 @@
 
     #- name: Verify Checksum
     #  failed_when: calc_checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
+    - name: Print calculated checksum
+      debug:
+        msg: '{{checksum}}'
 
     - name: Get checksum
       shell: md5sum /shared/images/{{f5_image}}
-        provider: "{{provider}}"
       register: calc_checksum
       failed_when: calc_checksum.stdout.split(' ').0 != trusted_checksum
       
