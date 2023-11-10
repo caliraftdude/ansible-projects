@@ -8,7 +8,7 @@
   # This is stupidly done right now, but it will work.  There should be a calculated UUID or something that identifies
   # The pair of reports and the report names should be A & B or Before & After for example.
   - name: "Compare the two snapshots"
-    local_action: shell diff {{report_path}}/*.log
+    local_action: shell /usr/bin/diff {{report_path}}/*.log
     register: diff_output
 
   - name: "Output diff"
