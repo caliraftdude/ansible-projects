@@ -26,9 +26,10 @@
         provider: "{{provider}}"
         register: calc_checksum
       delegate_to: localhost
-
-    - name: Verify Checksum
       failed_when: calc_checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
+
+    #- name: Verify Checksum
+    #  failed_when: calc_checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
 
     #- name: Get checksum
     #  shell: md5sum /shared/images/{{f5_image}}
