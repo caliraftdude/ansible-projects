@@ -1,6 +1,6 @@
 [all:vars]
-ansible_user=admin
-ansible_password=admin
+device_working_dir=/var/tmp
+
 
 [lb]
 elb01-prod-DAL ansible_host=10.1.1.151 private_ip=10.1.1.151 ansible_user=admin ansible_password=admin
