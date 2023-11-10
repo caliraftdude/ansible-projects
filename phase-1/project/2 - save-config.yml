@@ -19,7 +19,7 @@
     - name: CREATE UCS
       f5networks.f5_modules.bigip_ucs_fetch:
         provider: "{{provider}}"
-        dest: /tmp/{{filename}}
+        dest: /opt/ansible/backups/{{filename}}
         backup: true
       delegate_to: localhost
 
