@@ -13,6 +13,7 @@
           password: "{{ansible_password}}"
           server_port: 443
           validate_certs: false
+          no_f5_teem: false
 
     - name: Reboot into new volume
       bigip_command:
