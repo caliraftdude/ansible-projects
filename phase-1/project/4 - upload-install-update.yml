@@ -34,7 +34,7 @@
     - name: Get checksum
       shell: md5sum /shared/images/{{f5_image}}
       register: calc_checksum
-      failed_when: calc_checksum.stdout.split(' ').0 != {{trusted_checksum}}
+      failed_when: calc_checksum.stdout.split(' ').0 != trusted_checksum
       
     - name: Print Checksums
       debug:
