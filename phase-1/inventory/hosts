@@ -1,5 +1,6 @@
 [all:vars]
 device_working_dir=/var/tmp
+mount_dir=/opt/ansible
 
 
 [lb]
