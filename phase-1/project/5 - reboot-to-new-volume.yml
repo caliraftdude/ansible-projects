@@ -16,6 +16,9 @@
           no_f5_teem: false
 
     - name: Reboot into new volume
+    # If you try and reboot into the volume you are in, you will get a
+    #  "stdout": ["Data Input Error: \"HD1.2\" the active volume may not be specified"] and the module
+    # will hang in a confused state - need to error check and catch this as it doesn't throw an error.
       bigip_command:
         provider: "{{provider}}"
         commands: reboot volume {{new_volume}}
