@@ -26,6 +26,7 @@
         image: '{{repo_path}}/{{f5_image}}'
         provider: "{{provider}}"
       delegate_to: localhost
+      register: checksum
 
     #- name: Verify Checksum
     #  failed_when: calc_checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
