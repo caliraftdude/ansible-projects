@@ -13,31 +13,32 @@
           password: "{{ansible_password}}"
           server_port: 443
           validate_certs: false
+          no_f5_teem: false
 
     - name: Get iso md5 hash
       debug:
-        msg: "{{lookup('file', '/tmp/BIGIP-15.1.10.2-0.0.2.iso.md5').split(' ').0}}"
+        msg: "{{lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0}}"
 
     - name: Upload image to device
       bigip_software_image:
-        image: /tmp/BIGIP-15.1.10.2-0.0.2.iso
+        image: '{{repo_path}}/{{f5_image}}'
         provider: "{{provider}}"
       delegate_to: localhost
 
     - name: Get checksum
-      shell: md5sum /tmp/BIGIP-15.1.10.2-0.0.2.iso
+      shell: md5sum /shared/images/{{f5_image}}
       register: checksum
-      failed_when: checksum.stdout.split(' ').0 != lookup('file', '/tmp/BIGIP-15.1.10.2-0.0.2.iso.md5').split(' ').0
+      failed_when: checksum.stdout.split(' ').0 != lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0
       
     - name: Print Checksums
       debug:
         msg: 
           - "calulated md5sum is {{checksum.stdout.split(' ').0}}"
-          -  "trusted md5sum is {{lookup('file', '/tmp/BIGIP-15.1.10.2-0.0.2.iso.md5').split(' ').0}}"
+          -  "trusted md5sum is {{lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0}}"
 
     - name: Ensure an existing image is installed in specified volume
       bigip_software_install:
-        image: BIGIP-15.1.10.2-0.0.2.iso
+        image: '{{f5_image}}'
         volume: HD1.2
         state: installed
         provider: "{{provider}}"
@@ -45,8 +46,9 @@
 
     - name: Activate the new image and reboot into that volume
     # For some reason this doesn't activate or reboot the system.  Issue #2374 has been opened to investigate
+    # Response on #2374 is they are not going to fix it and NEXT will be great.
       bigip_software_install:
-        image: BIGIP-15.1.10.2-0.0.2.iso
+        image: '{{f5_image}}'
         volume: HD1.2
         state: activated
         provider: "{{provider}}"
