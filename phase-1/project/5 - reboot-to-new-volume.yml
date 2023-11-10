@@ -17,7 +17,7 @@
     - name: Reboot into new volume
       bigip_command:
         provider: "{{provider}}"
-        commands: reboot volume HD1.2
+        commands: reboot volume {{new_volume}}
 
     - name : Wait for system to restart and become unreachable
       wait_for:
