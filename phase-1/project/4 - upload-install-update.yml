@@ -14,11 +14,12 @@
           server_port: 443
           validate_certs: false
           no_f5_teem: false
+        trusted_checksum: "{{lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0}}"
 
 
     - name: Get iso md5 hash
       debug:
-        msg: "{{lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0}}"
+        msg: trusted_checksum
 
     - name: Upload image to device
       bigip_software_image:
