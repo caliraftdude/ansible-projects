@@ -49,7 +49,7 @@
     # Response on #2374 is they are not going to fix it and NEXT will be great.
       bigip_software_install:
         image: '{{f5_image}}'
-        volume: HD1.2
+        volume: '{{new_volume}}'
         state: activated
         provider: "{{provider}}"
       delegate_to: localhost
