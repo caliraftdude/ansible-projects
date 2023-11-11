@@ -4,7 +4,7 @@
   connection: local
   gather_facts: false
   vars:
-    filename: "{{ lookup('pipe', 'date +%FT%H%MZ') }}-backup.ucs"
+    filename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-backup.ucs"
 
   tasks:
     - name: Setup provider
@@ -20,7 +20,7 @@
     - name: CREATE UCS
       f5networks.f5_modules.bigip_ucs_fetch:
         provider: "{{provider}}"
-        dest: /opt/ansible/backups/{{filename}}
+        dest: "{{backup_dir}}"/{{filename}}
         backup: true
       delegate_to: localhost
 
