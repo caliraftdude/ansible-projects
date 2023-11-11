@@ -12,7 +12,7 @@
         provider:
           server: "{{private_ip}}"
           user: "{{ansible_user}}"
-          password: "{{ansible_ssh_pass}}"
+          password: "{{ansible_password}}"
           no_f5_teem: false
           server_port: 443
           validate_certs: false
