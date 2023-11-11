@@ -23,7 +23,7 @@
       #  A good enhancement would be to verify the volume to error check and catch this and avoid an error.
       bigip_command:
         provider: "{{provider}}"
-        commands: "reboot volume {{new_volume}}"
+        commands: "reboot volume HD1.2"
 
     - name : Wait for system to restart and become unreachable
       # This is imperative as the playbook will execute faster than the device will start the reboot process
