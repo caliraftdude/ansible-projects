@@ -20,7 +20,7 @@
     - name: CREATE UCS
       f5networks.f5_modules.bigip_ucs_fetch:
         provider: "{{provider}}"
-        dest: "{{backup_dir}}"/{{filename}}
+        dest: "{{backup_dir}}/{{filename}}"
         backup: true
       delegate_to: localhost
 
