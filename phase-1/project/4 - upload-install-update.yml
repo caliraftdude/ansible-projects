@@ -5,6 +5,18 @@
   gather_facts: false
 
   tasks:
+    # This playbook has some regretable gynamatics but it does resolve.  There are some dependencies to note:
+    # 1. trusted_checksum is set by looking at the mounted repo and looking for the images' md5 file.  This
+    # means that when you upload an iso you HAVE to upload its requisite md5 file otherwise the checksum check
+    # will fail and the playbook will throw as well.
+    # 2. calc_checksum is generated on the target device.  It would be better if the return value from the 
+    # previous task could be used to do this, but I had no luck getting that to work.  Some manipulation is 
+    # also required to get just the checksum as with the md5 file.
+    # 3. Print Checksums is not entirely necessary, but is nice to get an output that verifies the match or 
+    # mismatch
+    # 4. The two last tasks make use of f5_image and new_volume are set in the template of awx.  This is done
+    # so its easy to manipulate within awx if it needs to be changed rather than modifying it in source code
+    # and then having to sync everything which is less reliable.
     - name: Setup provider
       set_fact:
         provider:
@@ -39,7 +51,7 @@
     - name: Ensure an existing image is installed in specified volume
       bigip_software_install:
         image: '{{f5_image}}'
-        volume: HD1.2
+        volume: "{{new_volume}}"
         state: installed
         provider: "{{provider}}"
       delegate_to: localhost
