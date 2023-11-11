@@ -2,6 +2,7 @@
 device_working_dir=/var/tmp
 mount_dir=/opt/ansible
 report_dir=/opt/ansible/reports
+backup_dir=/opt/ansible/backups
 
 
 [lb]
