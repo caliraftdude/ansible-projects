@@ -1,0 +1,36 @@
+---
+# A bit of bash trickery here.  An ls is done which removes fluff, orders it and so on.  Then we grep
+# for the inventory_hostname (assuming there will be many hosts this is running or has been run against) to
+# make sure we only look for THIS host.  The we grep for BEFORE and pipe to tail -n 1 to make sure we get
+# the 'last one'.
+- name: Retrieve the last BEFORE report
+  shell: ls -fArt {{report_dir}} | grep {{inventory_hostname}} | grep BEFORE | tail -n 1
+  register: ls_b
+  delegate_to: localhost
+
+# Similar except we look for AFTER instead of BEFORE
+- name: Retrieve the last AFTER report
+  shell: ls -fArt {{report_dir}} | grep {{inventory_hostname}} |  grep AFTER | tail -n 1
+  register: ls_a
+  delegate_to: localhost
+
+# With the correct report names setup, we set before and after facts with the contents of those respective files
+- name: Get file contents into facts
+  set_fact:
+    before: "{{ lookup('file', '{{report_dir}}/{{ls_b.stdout}}') }}"
+    after: "{{ lookup('file', '{{report_dir}}/{{ls_a.stdout}}') }}"
+
+# NOW, we can run the fact_diff and register the output to diff_output
+- name: Compare the BEFORE and AFTER snapshots
+  ansible.utils.fact_diff:
+    before: "{{before}}"
+    after: "{{after}}"
+  register: diff_output
+
+# To finalize, output any differences found between the two reports and also fail the task if diff_output.failed is
+# true.  This is meant more to highlight that there were differences that need to be reviewed rather than an actual
+# 'failure'
+- name: "Output diff"
+  debug:
+    msg: "Diff output: {{diff_output.diff_lines}}"
+  failed_when: "diff_output.failed == true"

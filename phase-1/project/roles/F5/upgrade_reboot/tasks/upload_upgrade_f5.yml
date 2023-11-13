@@ -1,0 +1,47 @@
+---
+
+- name: Reboot into new volume
+  # If you try and reboot into the volume you are in, you will get a
+  #  "stdout": ["Data Input Error: \"HD1.2\" the active volume may not be specified"] and the module
+  # will hang in a confused state.  A good enhancement would be to verify the volume to error check 
+  # and catch this and avoid an error.
+  # Also - critical that this is delegated to localhost as we want the EE to tell the device to reboot
+  # otherwise ansible has trouble understanding if the command succeeds or if it just lost a connection.
+  bigip_command:
+    provider: "{{provider}}"
+    commands: 'reboot volume HD1.2'
+  delegate_to: localhost
+
+- name : Wait for system to restart and become unreachable
+  # This is imperative as the playbook will execute faster than the device will start the reboot process
+  # and you will get a false positive that the device has 'rebooted'.  This waits for the device to become
+  # unresponsive BEFORE it starts checking to see if its alive again to avoid that.
+  # Also necessary to delegate to localhost as we want it exernally determined the device is now unreachable, 
+  # and thus 'rebooting'
+  wait_for:
+    host: "{{private_ip}}"
+    port: 443
+    state: stopped
+  delegate_to: localhost
+
+- name: Wait for restart to complete
+  # This tasks loops attempting to connect to the control plane/UI.  It is hard set to retry 45 times which
+  # in testing should be sufficient.  Since this is not a dynamic variable I left it hardcoded.  If the
+  # url is NOT available, it will have a network timeout and then reattempt, so its not exactly rapid-fire.
+  # It looks specifically for a 200 return.  You can rely on the module for this, but I found that to be less
+  # reliable in testing.
+  # Obviously needs to be delegated to localhost..
+  uri:
+    url: "https://{{ansible_host}}/tmui/login.jsp"
+    method: GET
+    status_code: 200
+    timeout: 300
+    body_format: json
+    force_basic_auth: true
+    user: "{{ansible_user}}"
+    password: "{{ansible_password}}"
+    validate_certs: false
+  delegate_to: localhost
+  register: result
+  until: "result.status == 200"
+  retries: 45

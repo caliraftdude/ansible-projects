@@ -1,0 +1,6 @@
+---
+ - name: Upload and Upgrade F5 Array
+   include: upload_upgrade_f5.yml
+   with_items: "{{tenant_info}}"
+   loop_control:
+     loop_var: tenant_info_var

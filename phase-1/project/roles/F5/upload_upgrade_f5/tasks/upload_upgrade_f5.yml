@@ -1,0 +1,41 @@
+---
+
+- name: Upload image to device
+  bigip_software_image:
+    image: '{{repo_path}}/{{f5_image}}'
+    provider: "{{provider}}"
+  delegate_to: localhost
+
+- name: Get checksum
+  bigip_command:
+    provider: "{{provider}}"
+    commands: 'run /util bash -c "md5sum /shared/images/{{f5_image}}"'
+  delegate_to: localhost
+  register: calc_checksum
+  failed_when: calc_checksum.stdout.0.split(' ').0 != trusted_checksum
+  
+- name: Print Checksums
+  debug:
+    msg: 
+      - "calulated md5sum is {{calc_checksum.stdout.0.split(' ').0}}"
+      -  "trusted md5sum is {{trusted_checksum}}"
+
+- name: Ensure an existing image is installed in specified volume
+  bigip_software_install:
+    image: '{{f5_image}}'
+    volume: "{{new_volume}}"
+    state: installed
+    provider: "{{provider}}"
+  delegate_to: localhost
+
+- name: Activate the new image and reboot into that volume
+# For some reason this doesn't activate or reboot the system.  Issue #2374 has been opened to investigate
+# Response on #2374 is they are not going to fix it and NEXT will be great.
+  bigip_software_install:
+    image: '{{f5_image}}'
+    volume: '{{new_volume}}'
+    state: activated
+    provider: "{{provider}}"
+  delegate_to: localhost
+
+    

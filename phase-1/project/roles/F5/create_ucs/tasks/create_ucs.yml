@@ -1,0 +1,39 @@
+---
+# Uses blockinfile to build a script dynamically on the device.  This regretably puts a requirement to have a
+# mirrored ssh host for each device.  There are other ways to do this to avoid this dependency.
+- name: "Write out data collection script"
+  blockinfile:
+    create: yes
+    path: '{{script_file}}'
+    content:  |
+
+      tmsh show ltm virtual | grep "Virtual Server:\|Availability\|State" | xargs -n3 -d'\n' | sort
+      tmsh show ltm pool | grep "Pool:\|Availability\|State" | xargs -n3 -d'\n' | sort
+      tmsh show ltm node | grep "Node:\|Availability\|State" | xargs -n3 -d'\n' | sort
+
+      imish << EOF
+      en
+      show ip route | exclude (-|Gateway of last resort)
+      show bgp ipv4 neighbors
+      EOF
+
+# Easier to add a shell tag after the fact.  Simple hack to accomplish this.
+- name: "Add shell tag"
+  lineinfile:
+    path: '{{script_file}}'
+    insertbefore: '^# BEGIN ANSIBLE MANAGED BLOCK'
+    line: '#!/bin/bash'
+
+# Self explanatory, runs the script and collects the output.  It may be advisable to put some crumple zones
+# around this as weird issues and errors are not going to be gracefully handled or discovered.
+- name: "Run Script"
+  shell: 'bash {{script_file}} > {{data_file}}'
+
+# With the data collected, it needs to be copied to the Execution Environment which is a mounted directory.  Meaning
+# that this will be saved outside the container on the node and accessible after the playbook, and EE, have been
+# cleaned up.
+- name: "Collect Data"
+  fetch:
+    flat: true
+    dest: '{{report_dir}}/{{filename}}'
+    src: '{{data_file}}'
