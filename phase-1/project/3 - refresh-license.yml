@@ -10,7 +10,7 @@
         provider:
           server: "{{private_ip}}"
           user: "{{ansible_user}}"
-          password: "{{ansible_ssh_pass}}"
+          password: "{{ansible_password}}"
           server_port: 443
           validate_certs: false
           no_f5_teem: false
@@ -22,4 +22,6 @@
         accept_eula: true
         force: true
         license_server: "activate.f5.com"
-        state: latest
+        state: present
+        # issue with license servers, changed to present
+        #state: latest
