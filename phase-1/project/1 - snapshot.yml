@@ -15,6 +15,7 @@
   tasks:
     # Uses blockinfile to build a script dynamically on the device.  This regretably puts a requirement to have a
     # mirrored ssh host for each device.  There are other ways to do this to avoid this dependency.
+    # Issue:  if the system doesn't have dynamic routing then this will error out - should have more crumple zones.
     - name: "Write out data collection script"
       blockinfile:
         create: yes
