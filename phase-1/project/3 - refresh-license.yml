@@ -25,3 +25,4 @@
         state: present
         # issue with license servers, changed to present
         #state: latest
+      delegate_to: localhost
