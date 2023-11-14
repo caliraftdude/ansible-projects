@@ -7,7 +7,7 @@ backup_dir=/opt/ansible/backups
 
 [lb]
 elb01-prod-DAL ansible_host=10.1.1.151 private_ip=10.1.1.151 ansible_user=admin ansible_password=admin f5_reg_key=LKERN-HLLOR-ZJGOM-URZDA-PMALOSC
-elb03-DR-DEN ansible_host=10.1.1.152 private_ip=10.1.1.152 ansible_user-admin ansible_password=admin f5_reg_key=WYPFQ-TTDTH-KOWRW-ZNWFD-PMDACFD
+elb03-DR-DEN ansible_host=10.1.1.152 private_ip=10.1.1.152 ansible_user=admin ansible_password=admin f5_reg_key=WYPFQ-TTDTH-KOWRW-ZNWFD-PMDACFD
 
 [ssh]
 elb01-prod-DAL ansible_host=10.1.1.151 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=default 
