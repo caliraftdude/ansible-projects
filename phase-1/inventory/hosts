@@ -1,9 +1,8 @@
 [all:vars]
-ansible_user=admin
-ansible_password=admin
+device_working_dir=/var/tmp
+report_dir=/opt/ansible/reports
 
 [lb]
-f5 ansible_host=10.1.1.151 private_ip=10.1.1.151 ansible_user=admin ansible_password=admin
-
+big-ip-1 ansible_host=10.1.1.151 private_ip=10.1.1.151 ansible_user=admin ansible_password=admin
 [ssh]
-10.1.1.151 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=default 
+big-ip-1 ansible_host=10.1.1.151 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=default 

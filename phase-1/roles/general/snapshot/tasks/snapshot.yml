@@ -1,43 +1,40 @@
 ---
-# todo:
-# 1. put paths into variables so they can easily be modified
-# 2. clean up resources on big-ip
-- name: "Get bigip status of virtuals, pools, nodes, and routes"
-  hosts: ssh
-  gather_facts: false
-  connection: local
-  vars:
-    filename: "{{ lookup('pipe', 'date +%FT%H%MZ') }}-data_collection.log"
+# Uses blockinfile to build a script dynamically on the device.  This regretably puts a requirement to have a
+# mirrored ssh host for each device.  There are other ways to do this to avoid this dependency.
+# Issue:  if the system doesn't have dynamic routing then this will error out - should have more crumple zones.
+- name: "Write out data collection script"
+  blockinfile:
+    create: yes
+    path: '{{script_file}}'
+    content:  |
 
-  tasks:
-    - name: "Write out data collection script"
-      blockinfile:
-        create: yes
-        path: /var/tmp/data_collection_script.sh
-        content:  |
+      tmsh show ltm virtual | grep "Virtual Server:\|Availability\|State" | xargs -n3 -d'\n' | sort
+      tmsh show ltm pool | grep "Pool:\|Availability\|State" | xargs -n3 -d'\n' | sort
+      tmsh show ltm node | grep "Node:\|Availability\|State" | xargs -n3 -d'\n' | sort
 
-          tmsh show ltm virtual | grep "Virtual Server:\|Availability\|State" | xargs -n3 -d'\n' | sort
-          tmsh show ltm pool | grep "Pool:\|Availability\|State" | xargs -n3 -d'\n' | sort
-          tmsh show ltm node | grep "Node:\|Availability\|State" | xargs -n3 -d'\n' | sort
+      imish << EOF
+      en
+      show ip route | exclude (-|Gateway of last resort)
+      show bgp ipv4 neighbors
+      EOF
 
-          imish << EOF
-          en
-          show ip route | exclude (-|Gateway of last resort)
-          show bgp ipv4 neighbors
-          EOF
+# Easier to add a shell tag after the fact.  Simple hack to accomplish this.
+- name: "Add shell tag"
+  lineinfile:
+    path: '{{script_file}}'
+    insertbefore: '^# BEGIN ANSIBLE MANAGED BLOCK'
+    line: '#!/bin/bash'
 
-    - name: "Add shell tag"
-      lineinfile:
-        path: /var/tmp/data_collection_script.sh
-        insertbefore: '^# BEGIN ANSIBLE MANAGED BLOCK'
-        line: '#!/bin/bash'
+# Self explanatory, runs the script and collects the output.  It may be advisable to put some crumple zones
+# around this as weird issues and errors are not going to be gracefully handled or discovered.
+- name: "Run Script"
+  shell: bash '{{script_file}} > /tmp/{{filename}}'
 
-    - name: "Run Script"
-      shell: bash /var/tmp/data_collection_script.sh > /var/tmp/{{filename}}
-
-    - name: "Collect Script"
-      fetch:
-        flat: true
-        dest: /tmp/{{filename}}
-        src: /var/tmp/{{filename}}
-
+# With the data collected, it needs to be copied to the Execution Environment which is a mounted directory.  Meaning
+# that this will be saved outside the container on the node and accessible after the playbook, and EE, have been
+# cleaned up.
+- name: "Collect Script"
+  fetch:
+    flat: true
+    dest: '{{report_dir}}/{{filename}}'
+    src: '/tmp/{{filename}}'
