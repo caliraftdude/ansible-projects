@@ -28,7 +28,7 @@
 # Self explanatory, runs the script and collects the output.  It may be advisable to put some crumple zones
 # around this as weird issues and errors are not going to be gracefully handled or discovered.
 - name: "Run Script"
-  shell: bash '{{script_file}} > /tmp/{{filename}}'
+  shell: 'bash {{script_file}} > {{data_file}}'
 
 # With the data collected, it needs to be copied to the Execution Environment which is a mounted directory.  Meaning
 # that this will be saved outside the container on the node and accessible after the playbook, and EE, have been
@@ -37,4 +37,4 @@
   fetch:
     flat: true
     dest: '{{report_dir}}/{{filename}}'
-    src: '/tmp/{{filename}}'
+    src: '{{data_file}}'
