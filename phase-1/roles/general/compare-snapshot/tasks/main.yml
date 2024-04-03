@@ -1,0 +1,4 @@
+---
+ - name: Collection Script Array Run
+   include_tasks: compare-snapshots.yml
+   

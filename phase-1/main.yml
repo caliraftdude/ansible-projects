@@ -27,3 +27,9 @@
     data_file: "{{device_working_dir}}/{{filename}}"
   roles:
     - roles/general/snapshot
+
+- name: "Compare the two snapshots"
+  hosts: lb
+  gather_facts: false
+  roles:
+    - roles/general/compare-snapshot
