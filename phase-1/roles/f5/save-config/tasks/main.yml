@@ -1,0 +1,4 @@
+---
+ - name: Create and save UCS for the device
+   include_tasks: save-config.yml
+   

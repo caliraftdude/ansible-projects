@@ -14,6 +14,18 @@
     - roles/general/snapshot
 
 
+- name: Create UCS/backup and save locally off-box
+  hosts: lb
+  gather_facts: false
+  vars:
+    ucsfilename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-backup.ucs"
+
+  roles:
+    - roles/f5/save-config
+
+
+
+
 - name: "Get bigip status of virtuals, pools, nodes, and routes - final state"
   hosts: ssh
   gather_facts: false
