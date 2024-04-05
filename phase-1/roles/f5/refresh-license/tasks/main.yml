@@ -1,0 +1,4 @@
+---
+ - name: Refresh License Array
+   include_tasks: refresh-license.yml
+   

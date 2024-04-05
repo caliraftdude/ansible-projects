@@ -4,6 +4,6 @@ report_dir=/opt/ansible/reports
 backup_dir=/opt/ansible/backups
 
 [lb]
-big-ip-1 ansible_host=10.1.1.151 private_ip=10.1.1.151 ansible_user=admin ansible_password=admin
+big-ip-1 ansible_host=10.1.1.151 private_ip=10.1.1.151 ansible_user=admin ansible_password=admin f5_reg_key=DYUAP-FWZNS-JHHDO-MQRCZ-TPSAHOC
 [ssh]
 big-ip-1 ansible_host=10.1.1.151 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=default 

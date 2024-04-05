@@ -11,19 +11,24 @@
     script_file: "{{device_working_dir}}/data_collection_script.sh"
     data_file: "{{device_working_dir}}/{{filename}}"
   roles:
-    - roles/general/snapshot
+    #- roles/general/snapshot
 
 
 - name: Create UCS/backup and save locally off-box
   hosts: lb
-  gather_facts: false
+  #gather_facts: false
   vars:
     ucsfilename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-backup.ucs"
 
   roles:
-    - roles/f5/save-config
+  #  - roles/f5/save-config
 
+- name: BIG-IP Refresh license
+  hosts: lb
+  gather_facts: false
 
+  roles:
+  - roles/f5/refresh-license
 
 
 - name: "Get bigip status of virtuals, pools, nodes, and routes - final state"
@@ -38,10 +43,10 @@
     script_file: "{{device_working_dir}}/data_collection_script.sh"
     data_file: "{{device_working_dir}}/{{filename}}"
   roles:
-    - roles/general/snapshot
+    #- roles/general/snapshot
 
 - name: "Compare the two snapshots"
   hosts: lb
   gather_facts: false
   roles:
-    - roles/general/compare-snapshot
+    #- roles/general/compare-snapshot
