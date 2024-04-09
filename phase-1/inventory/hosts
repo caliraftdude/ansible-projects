@@ -2,6 +2,7 @@
 device_working_dir=/var/tmp
 report_dir=/opt/ansible/reports
 backup_dir=/opt/ansible/backups
+repo_path=/opt/ansible/images
 
 [lb]
 big-ip-1 ansible_host=10.1.1.151 private_ip=10.1.1.151 ansible_user=admin ansible_password=admin f5_reg_key=DYUAP-FWZNS-JHHDO-MQRCZ-TPSAHOC

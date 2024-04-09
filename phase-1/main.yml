@@ -11,7 +11,7 @@
     script_file: "{{device_working_dir}}/data_collection_script.sh"
     data_file: "{{device_working_dir}}/{{filename}}"
   roles:
-    #- roles/general/snapshot
+    - roles/general/snapshot
 
 
 - name: Create UCS/backup and save locally off-box
@@ -21,7 +21,7 @@
     ucsfilename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-backup.ucs"
 
   roles:
-  #  - roles/f5/save-config
+    - roles/f5/save-config
 
 - name: BIG-IP Refresh license
   hosts: lb
@@ -29,6 +29,19 @@
 
   roles:
   - roles/f5/refresh-license
+
+
+- name: BIG-IP Upload, verify, and install image to device.  Prep for reboot.
+  hosts: lb
+  gather_facts: false
+  vars:
+    f5_image: "BIGIP-15.1.10.2-0.0.2.iso"
+    trusted_checksum: "{{lookup('file', '{{repo_path}}/{{f5_image}}.md5').split(' ').0}}"
+    new_volume: HD1.2
+  roles:
+    - roles/f5/upload-install-update
+
+
 
 
 - name: "Get bigip status of virtuals, pools, nodes, and routes - final state"
@@ -43,10 +56,10 @@
     script_file: "{{device_working_dir}}/data_collection_script.sh"
     data_file: "{{device_working_dir}}/{{filename}}"
   roles:
-    #- roles/general/snapshot
+    - roles/general/snapshot
 
 - name: "Compare the two snapshots"
   hosts: lb
   gather_facts: false
   roles:
-    #- roles/general/compare-snapshot
+    - roles/general/compare-snapshot
