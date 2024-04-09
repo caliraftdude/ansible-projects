@@ -28,7 +28,7 @@
   gather_facts: false
 
   roles:
-  - roles/f5/refresh-license
+    - roles/f5/refresh-license
 
 
 - name: BIG-IP Upload, verify, and install image to device.  Prep for reboot.
@@ -41,7 +41,13 @@
   roles:
     - roles/f5/upload-install-update
 
-
+- name: BIG-IP reboot into new volume
+  hosts: lb
+  gather_facts: false
+  vars:
+    new_volume: HD1.2
+  roles:
+    - roles/f5/reboot-to-new-volume
 
 
 - name: "Get bigip status of virtuals, pools, nodes, and routes - final state"

@@ -1,0 +1,3 @@
+---
+- name: Reboot the device to a new volume
+  include_tasks: reboot-to-new-volume.yml
