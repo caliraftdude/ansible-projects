@@ -1,10 +1,9 @@
 [all:vars]
-device_working_dir=/var/tmp
-report_dir=/opt/ansible/reports
-backup_dir=/opt/ansible/backups
-repo_path=/opt/ansible/images
+device_working_dir = /var/tmp
+mount_dir = /opt/ansible
+report_dir = {{mount_dir}}/reports
+backup_dir = {{mount_dir}}/backups
+repo_path = {{mount_dir}}/images
 
 [lb]
-big-ip-1 ansible_host=10.1.1.151 private_ip=10.1.1.151 ansible_user=admin ansible_password=admin f5_reg_key=DYUAP-FWZNS-JHHDO-MQRCZ-TPSAHOC
-[ssh]
-big-ip-1 ansible_host=10.1.1.151 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=default 
+big-ip-1 ansible_host=10.1.1.151 ansible_user=admin ansible_password=admin ansible_ssh_user=root ansible_ssh_pass=default

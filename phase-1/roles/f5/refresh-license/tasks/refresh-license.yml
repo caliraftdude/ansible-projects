@@ -1,19 +1,17 @@
 ---
-# - name: Collect all BIG-IP information
-#   f5networks.f5_modules.bigip_device_info:
-#     provider: "{{ provider }}"
-#     gather_subset:
-#       - license
-#   register: license_info
-#   delegate_to: localhost
-# There is a bug in the ansible module that prevents this from working.  This is being tracked under github issue #2399
+- name: Collect all BIG-IP information
+  f5networks.f5_modules.bigip_device_info:
+    provider: "{{ provider }}"
+    gather_subset:
+      - license
+  register: license_info
+  delegate_to: localhost
 
 - name: Refresh license
   f5networks.f5_modules.bigip_device_license:
     provider: "{{provider}}"
-    license_key: "{{f5_reg_key}}"
+    license_key: "{{ license_info.license.registration_key }}"
     accept_eula: true
     force: true
-    # Change state to latest to verify its refreshed
-    state: present
+    state: latest
   delegate_to: localhost

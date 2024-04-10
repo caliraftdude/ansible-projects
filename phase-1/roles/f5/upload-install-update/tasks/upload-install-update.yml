@@ -44,10 +44,10 @@
 # Response on #2374 is they are not going to fix it.  The next part of the procedure will reboot the device.
 # Alterntively, you could change the previous task to change the state to activated, but that will change
 # how this could be staged nondestructively, and then rebooted during a maintenance window.
-  bigip_software_install:
-    image: '{{f5_image}}'
-    volume: '{{new_volume}}'
-    state: activated
-    provider: "{{provider}}"
-  delegate_to: localhost
-  ignore_errors: true
+  # bigip_software_install:
+  #   image: '{{f5_image}}'
+  #   volume: '{{new_volume}}'
+  #   state: activated
+  #   provider: "{{provider}}"
+  # delegate_to: localhost
+  # ignore_errors: true
