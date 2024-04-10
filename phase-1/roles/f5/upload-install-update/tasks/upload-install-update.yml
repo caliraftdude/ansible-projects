@@ -8,9 +8,7 @@
 # also required to get just the checksum as with the md5 file.
 # 3. Print Checksums is not entirely necessary, but is nice to get an output that verifies the match or 
 # mismatch
-# 4. The two last tasks make use of f5_image and new_volume are set in the template of awx.  This is done
-# so its easy to manipulate within awx if it needs to be changed rather than modifying it in source code
-# and then having to sync everything which is less reliable.
+
 - name: Upload image to device
   bigip_software_image:
     image: '{{repo_path}}/{{f5_image}}'
@@ -39,15 +37,3 @@
     provider: "{{provider}}"
   delegate_to: localhost
 
-#- name: Activate the new image and reboot into that volume
-# For some reason this doesn't activate or reboot the system.  Issue #2374 has been opened to investigate
-# Response on #2374 is they are not going to fix it.  The next part of the procedure will reboot the device.
-# Alterntively, you could change the previous task to change the state to activated, but that will change
-# how this could be staged nondestructively, and then rebooted during a maintenance window.
-  # bigip_software_install:
-  #   image: '{{f5_image}}'
-  #   volume: '{{new_volume}}'
-  #   state: activated
-  #   provider: "{{provider}}"
-  # delegate_to: localhost
-  # ignore_errors: true
