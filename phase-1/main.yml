@@ -1,6 +1,6 @@
 ---
 - name: "Get bigip status of virtuals, pools, nodes, and routes - initial state"
-  hosts: ssh
+  hosts: lb
   gather_facts: false
   vars:
     # filename is built to hold the report name.  Its timestamped and designated with BEFORE which is used in comparison

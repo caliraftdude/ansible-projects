@@ -39,7 +39,7 @@
     provider: "{{provider}}"
   delegate_to: localhost
 
-- name: Activate the new image and reboot into that volume
+#- name: Activate the new image and reboot into that volume
 # For some reason this doesn't activate or reboot the system.  Issue #2374 has been opened to investigate
 # Response on #2374 is they are not going to fix it.  The next part of the procedure will reboot the device.
 # Alterntively, you could change the previous task to change the state to activated, but that will change
