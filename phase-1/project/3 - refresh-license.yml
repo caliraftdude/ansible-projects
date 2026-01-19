@@ -22,3 +22,4 @@
         force: true
         license_server: "activate.f5.com"
         state: latest
+      delegate_to: localhost
