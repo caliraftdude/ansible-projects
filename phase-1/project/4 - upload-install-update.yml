@@ -16,28 +16,28 @@
 
     - name: Get iso md5 hash
       debug:
-        msg: "{{lookup('file', '/tmp/BIGIP-15.1.10.2-0.0.2.iso.md5').split(' ').0}}"
+        msg: "{{lookup('file', '/home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso.md5').split(' ').0}}"
 
     - name: Upload image to device
       bigip_software_image:
-        image: /tmp/BIGIP-15.1.10.2-0.0.2.iso
+        image: /home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso
         provider: "{{provider}}"
       delegate_to: localhost
 
     - name: Get checksum
-      shell: md5sum /tmp/BIGIP-15.1.10.2-0.0.2.iso
+      shell: md5sum /home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso
       register: checksum
-      failed_when: checksum.stdout.split(' ').0 != lookup('file', '/tmp/BIGIP-15.1.10.2-0.0.2.iso.md5').split(' ').0
+      failed_when: checksum.stdout.split(' ').0 != lookup('file', '/home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso.md5').split(' ').0
       
     - name: Print Checksums
       debug:
         msg: 
           - "calulated md5sum is {{checksum.stdout.split(' ').0}}"
-          -  "trusted md5sum is {{lookup('file', '/tmp/BIGIP-15.1.10.2-0.0.2.iso.md5').split(' ').0}}"
+          -  "trusted md5sum is {{lookup('file', '/home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso.md5').split(' ').0}}"
 
     - name: Ensure an existing image is installed in specified volume
       bigip_software_install:
-        image: BIGIP-15.1.10.2-0.0.2.iso
+        image: BIGIP-15.1.10-0.0.3.iso
         volume: HD1.2
         state: installed
         provider: "{{provider}}"
@@ -46,7 +46,7 @@
     - name: Activate the new image and reboot into that volume
     # For some reason this doesn't activate or reboot the system.  Issue #2374 has been opened to investigate
       bigip_software_install:
-        image: BIGIP-15.1.10.2-0.0.2.iso
+        image: BIGIP-15.1.10-0.0.3.iso
         volume: HD1.2
         state: activated
         provider: "{{provider}}"
