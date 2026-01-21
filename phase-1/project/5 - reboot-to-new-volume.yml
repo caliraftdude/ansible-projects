@@ -1,6 +1,7 @@
 ---
 - name: BIG-IP reboot into new volume
   hosts: lb
+  connection: local
   gather_facts: false
 
   tasks:
@@ -17,14 +18,12 @@
       bigip_command:
         provider: "{{provider}}"
         commands: reboot volume HD1.2
-      delegate_to: localhost
 
     - name : Wait for system to restart and become unreachable
       wait_for:
         host: "{{private_ip}}"
         port: 443
         state: stopped
-      delegate_to: localhost
 
     - name: Wait for restart to complete
       uri:
@@ -41,4 +40,3 @@
       register: f5networks
       until: f5networks is not failed
       retries: 45
-      delegate_to: localhost
