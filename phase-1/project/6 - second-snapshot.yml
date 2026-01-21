@@ -7,7 +7,7 @@
   gather_facts: false
   connection: local
   vars:
-    filename: "{{ lookup('pipe', 'date +%FT%H%MZ') }}-data_collection.log"
+    filename: "{{ lookup('pipe', 'date +%FT%H%MZ') }}-{{ inventory_hostname }}-data_collection.log"
 
   tasks:
     - name: "Write out data collection script"
