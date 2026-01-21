@@ -1,7 +1,6 @@
 ---
 - name: BIG-IP Refresh license
-  hosts: lb
-  connection: local
+  hosts: lb:wq!
   gather_facts: false
 
   tasks:
