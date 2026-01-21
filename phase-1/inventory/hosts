@@ -1,7 +1,6 @@
 [all:vars]
 ansible_user=admin
 ansible_password=admin
-ansible_python_interpreter=/usr/bin/python
 
 [lb]
 bigip0 ansible_host=10.1.1.8 private_ip=10.1.1.8 ansible_user=admin ansible_password=P@ssw0rd
@@ -10,3 +9,4 @@ bigip1 ansible_host=10.1.1.9 private_ip=10.1.1.9 ansible_user=admin ansible_pass
 [ssh]
 bigip0 ansible_host=10.1.1.8 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=P@ssw0rd
 bigip1 ansible_host=10.1.1.9 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=P@ssw0rd
+
