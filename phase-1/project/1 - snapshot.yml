@@ -5,7 +5,6 @@
 - name: "Get bigip status of virtuals, pools, nodes, and routes"
   hosts: ssh
   gather_facts: false
-  connection: local
   vars:
     filename: "{{ lookup('pipe', 'date +%FT%H%MZ') }}-data_collection.log"
 
