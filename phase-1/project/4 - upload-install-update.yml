@@ -27,7 +27,7 @@
     - name: Get checksum
       shell: md5sum /shared/images/BIGIP-15.1.10-0.0.3.iso
       register: checksum
-      failed_when: checksum.stdout.split(' ').0 != lookup('file', '/shared/images/BIGIP-15.1.10-0.0.3.iso.md5').split(' ').0
+      failed_when: checksum.stdout.split(' ').0 != lookup('file', '/home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso.md5').split(' ').0
       
     - name: Print Checksums
       debug:
