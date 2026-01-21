@@ -26,12 +26,20 @@
         state: stopped
       delegate_to: localhost
 
+    - name: Wait for system to become reachable
+      wait_for:
+        host: "{{ private_ip }}"
+        port: 443
+        state: started
+        timeout: 600
+      delegate_to: localhost
+  
     - name: Wait for restart to complete
       uri:
         url: "https://{{ ansible_host }}:443/mgmt/shared"
         method: GET
         status_code: 200
-        timeout: 300
+        timeout: 10
         body_format: json
         force_basic_auth: true
         user: "{{ ansible_user }}"
@@ -40,5 +48,5 @@
       delegate_to: localhost
       register: f5networks
       until: f5networks is not failed
-      retries: 45
-    delegate_to: localhost
+      retries: 30
+      delay: 10
