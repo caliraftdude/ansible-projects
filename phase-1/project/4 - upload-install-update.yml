@@ -1,7 +1,6 @@
 ---
 - name: BIG-IP Upload and Install Update
   hosts: lb
-  connection: local
   gather_facts: false
 
   tasks:
@@ -13,10 +12,14 @@
           password: "{{ansible_password}}"
           server_port: 443
           validate_certs: false
+          
+    - name: Store iso md5 hash
+      set_fact:
+        trusted_iso_md5: "{{ lookup('file', '/home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso.md5').split(' ').0 }}"
 
-    - name: Get iso md5 hash
+    - name: Print iso md5 hash
       debug:
-        msg: "{{lookup('file', '/home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso.md5').split(' ').0}}"
+        msg: "{{ trusted_iso_md5 }}"
 
     - name: Upload image to device
       bigip_software_image:
@@ -27,13 +30,17 @@
     - name: Get checksum
       shell: md5sum /shared/images/BIGIP-15.1.10-0.0.3.iso
       register: checksum
-      failed_when: checksum.stdout.split(' ').0 != lookup('file', '/home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso.md5').split(' ').0
+      failed_when: checksum.rc != 0
+    
+    - name: Store uploaded iso md5
+      set_fact:
+        uploaded_iso_md5: "{{ checksum.stdout.split(' ').0 }}"
       
     - name: Print Checksums
       debug:
         msg: 
-          - "calulated md5sum is {{checksum.stdout.split(' ').0}}"
-          -  "trusted md5sum is {{lookup('file', '/home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso.md5').split(' ').0}}"
+          - "calulated md5sum is {{uploaded_iso_md5}}"
+          -  "trusted md5sum is {{trusted_iso_md5}}"
 
     - name: Ensure an existing image is installed in specified volume
       bigip_software_install:
