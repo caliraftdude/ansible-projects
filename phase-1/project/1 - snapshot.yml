@@ -6,7 +6,7 @@
   hosts: lb
   gather_facts: false
   vars:
-    filename: "{{ lookup('pipe', 'date +%FT%H%MZ') }}-{{ inventory_hostname }}-data_collection.log"
+    filename: "{{ lookup('pipe', 'date +%FT%H%MZ') }}-{{ inventory_hostname }}-BEFORE.log"
 
   tasks:
     - name: "Write out data collection script"
