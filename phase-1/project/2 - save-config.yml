@@ -4,7 +4,7 @@
   connection: local
   gather_facts: false
   vars:
-    filename: "{{ lookup('pipe', 'date +%FT%H%MZ') }}-backup.ucs"
+    filename: "{{ lookup('pipe', 'date +%FT%H%MZ') }}-{{ inventory_hostname }}-backup.ucs"
 
   tasks:
     - name: Setup provider
