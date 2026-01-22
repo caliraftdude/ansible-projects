@@ -37,6 +37,6 @@
     - name: "Collect Script"
       fetch:
         flat: true
-        dest: /tmp/{{filename}}
+        dest: {{report_dir}}/{{filename}}
         src: /var/tmp/{{filename}}
 
