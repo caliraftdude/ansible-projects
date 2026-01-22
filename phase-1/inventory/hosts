@@ -1,12 +1,9 @@
-[all:vars]
+all:vars]
 ansible_user=admin
-ansible_password=admin
+ansible_password=P@ssw0rd
+ansible_ssh_user=root
+ansible_ssh_password=P@ssw0rd
 
 [lb]
-bigip0 ansible_host=10.1.1.8 private_ip=10.1.1.8 ansible_user=admin ansible_password=P@ssw0rd
-bigip1 ansible_host=10.1.1.9 private_ip=10.1.1.9 ansible_user=admin ansible_password=P@ssw0rd
-
-[ssh]
-bigip0 ansible_host=10.1.1.8 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=P@ssw0rd
-bigip1 ansible_host=10.1.1.9 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=P@ssw0rd
-
+bigip0 ansible_host=10.1.1.8 private_ip=10.1.1.8 license_key=PQUNC-IDNKD-UDRBQ-VHPYP-UNNOJUW
+bigip1 ansible_host=10.1.1.9 private_ip=10.1.1.9 license_key=OZICI-JCEHK-MLQLD-WXQUD-ERJSDDA
