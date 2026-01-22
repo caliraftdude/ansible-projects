@@ -1,0 +1,3 @@
+---
+report_dir: "{{ inventory_dir }}/../reports"
+isos_dir: "{{ inventory_dir }}/../isos"

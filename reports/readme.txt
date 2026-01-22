@@ -1,2 +1,2 @@
-Reports will be default will be saved here.  Modify the reports_dir in the [all:vars] 
-section of the inventory hosts file to change this behavior.
+Reports will be default will be saved here.  If you want to change this, modify 
+the all.yml file in the group_vars directory
