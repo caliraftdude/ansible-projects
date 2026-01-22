@@ -15,7 +15,7 @@
           
     - name: Store iso md5 hash
       set_fact:
-        trusted_iso_md5: "{{ lookup('file', '/home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso.md5').split(' ').0 }}"
+        trusted_iso_md5: "{{ lookup('file', '{{isos_dir}}/BIGIP-15.1.10-0.0.3.iso.md5').split(' ').0 }}"
 
     - name: Print iso md5 hash
       debug:
@@ -23,7 +23,7 @@
 
     - name: Upload image to device
       bigip_software_image:
-        image: /home/ubuntu/dev/isos/BIGIP-15.1.10-0.0.3.iso
+        image: "{{isos_dir}}/BIGIP-15.1.10-0.0.3.iso"
         provider: "{{provider}}"
       delegate_to: localhost
 
