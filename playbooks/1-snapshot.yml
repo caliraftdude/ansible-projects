@@ -1,7 +1,4 @@
 ---
-# todo:
-# 1. put paths into variables so they can easily be modified
-# 2. clean up resources on big-ip
 - name: "Get bigip status of virtuals, pools, nodes, and routes"
   hosts: lb
   gather_facts: false
