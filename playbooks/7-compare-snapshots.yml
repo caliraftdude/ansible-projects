@@ -10,21 +10,21 @@
   # make sure we only look for THIS host.  The we grep for BEFORE and pipe to tail -n 1 to make sure we get
   # the 'last one'.
   - name: Retrieve the last BEFORE report
-    shell: ls -fArt /tmp | grep {{inventory_hostname}} | grep BEFORE | tail -n 1
+    shell: ls -fArt {{report_dir}} | grep {{inventory_hostname}} | grep BEFORE | tail -n 1
     register: ls_b
     delegate_to: localhost
   
   # Similar except we look for AFTER instead of BEFORE
   - name: Retrieve the last AFTER report
-    shell: ls -fArt /tmp | grep {{inventory_hostname}} |  grep AFTER | tail -n 1
+    shell: ls -fArt {{report_dir}} | grep {{inventory_hostname}} |  grep AFTER | tail -n 1
     register: ls_a
     delegate_to: localhost
   
   # With the correct report names, we set before and after facts with the contents of those respective files
   - name: Get file contents into facts
     set_fact:
-      before: "{{ lookup('file', '/tmp/{{ls_b.stdout}}') }}"
-      after: "{{ lookup('file', '/tmp/{{ls_a.stdout}}') }}"
+      before: "{{ lookup('file', '{{report_dir}}/{{ls_b.stdout}}') }}"
+      after: "{{ lookup('file', '{{report_dir}}/{{ls_a.stdout}}') }}"
   
   # NOW, we can run the fact_diff and register the output to diff_output
   - name: Compare the BEFORE and AFTER snapshots
