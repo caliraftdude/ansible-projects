@@ -1,4 +1,4 @@
-all:vars]
+[all:vars]
 ansible_user=admin
 ansible_password=P@ssw0rd
 ansible_ssh_user=root
