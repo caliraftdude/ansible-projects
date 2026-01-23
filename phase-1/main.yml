@@ -15,6 +15,15 @@
   roles:
     - roles/general/snapshot
 
+- name: Create UCS/backup and save locally off-box
+  hosts: lb
+  #gather_facts: false
+  vars:
+    ucsfilename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-backup.ucs"
+
+  roles:
+    - roles/f5/save-config
+
 - name: "Get bigip final status of virtuals, pools, nodes, and routes"
   hosts: lb
   gather_facts: false
@@ -43,14 +52,7 @@
 
 
 
-# - name: Create UCS/backup and save locally off-box
-#   hosts: lb
-#   #gather_facts: false
-#   vars:
-#     ucsfilename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-backup.ucs"
 
-#   roles:
-#     - roles/f5/save-config
 
 # - name: BIG-IP Refresh license
 #   hosts: lb
