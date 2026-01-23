@@ -1,15 +1,9 @@
 [all:vars]
 device_working_dir = /var/tmp
-#mount_dir = /opt/ansible
-#report_dir = {{mount_dir}}/reports
-#backup_dir = {{mount_dir}}/backups
-#repo_path = {{mount_dir}}/images
-
 mount_dir = "{{ inventory_dir }}/.."
 report_dir = {{mount_dir}}/reports
-backup_dir = {{mount_dir}}/backups
+#backup_dir = {{mount_dir}}/backups
 isos_dir = {{mount_dir}}/isos
-
 
 ansible_user=admin
 ansible_password=P@ssw0rd

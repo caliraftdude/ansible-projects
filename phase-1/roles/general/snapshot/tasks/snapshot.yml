@@ -35,3 +35,4 @@
     flat: true
     dest: '{{report_dir}}/{{filename}}'
     src: '{{data_file}}'
+    
