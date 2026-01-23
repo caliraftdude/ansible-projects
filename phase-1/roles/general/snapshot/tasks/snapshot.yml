@@ -1,7 +1,6 @@
 ---
 # Uses blockinfile to build a script dynamically on the device.  This regretably puts a requirement to have a
-# mirrored ssh host for each device.  There are other ways to do this to avoid this dependency.
-# Issue:  if the system doesn't have dynamic routing then this will error out - should have more crumple zones.
+# mirrored ssh host for each device.
 - name: "Write out data collection script"
   blockinfile:
     create: yes
@@ -25,14 +24,12 @@
     insertbefore: '^# BEGIN ANSIBLE MANAGED BLOCK'
     line: '#!/bin/bash'
 
-# Self explanatory, runs the script and collects the output.  It may be advisable to put some crumple zones
-# around this as weird issues and errors are not going to be gracefully handled or discovered.
+# Self explanatory, runs the script and collects the output.
 - name: "Run Script"
   shell: 'bash {{script_file}} > {{data_file}}'
 
-# With the data collected, it needs to be copied to the Execution Environment which is a mounted directory.  Meaning
-# that this will be saved outside the container on the node and accessible after the playbook, and EE, have been
-# cleaned up.
+# With the data collected, it needs to be copied to the Execution Environment which is a mounted directory.  this will 
+# be saved outside the container on the node and accessible after the playbook, and EE, have been cleaned up.
 - name: "Collect Script"
   fetch:
     flat: true

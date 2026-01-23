@@ -1,5 +1,4 @@
 ---
-
 # provider:
 #   server: "{{ ansible_host }}"
 #   user: "{{f5_user}}"
