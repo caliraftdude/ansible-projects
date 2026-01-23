@@ -1,8 +1,5 @@
 ---
-# A bit of bash trickery here.  An ls is done which removes fluff, orders it and so on.  Then we grep
-# for the inventory_hostname (assuming there will be many hosts this is running or has been run against) to
-# make sure we only look for THIS host.  The we grep for BEFORE and pipe to tail -n 1 to make sure we get
-# the 'last one'.
+# Use a clever Unix command chain to get the latest BEFORE and AFTER report files
 - name: Retrieve the last BEFORE report
   shell: ls -fArt {{report_dir}} | grep {{inventory_hostname}} | grep BEFORE | tail -n 1
   register: ls_b
