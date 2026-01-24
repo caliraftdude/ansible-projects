@@ -31,25 +31,23 @@
 #   roles:
 #     - roles/f5/refresh-license
 
-- name: BIG-IP Upload, verify, and install image to device.  Prep for reboot.
-  hosts: lb
-  gather_facts: false
-  vars:
-    f5_image: "BIGIP-15.1.10-0.0.3.iso"
-    trusted_checksum: "{{lookup('file', '{{isos_dir}}/{{f5_image}}.md5').split(' ').0}}"
-    new_volume: HD1.2
-  roles:
-    - roles/f5/upload-install-update
-
-
-
-# - name: BIG-IP reboot into new volume
+# - name: BIG-IP Upload, verify, and install image to device.  Prep for reboot.
 #   hosts: lb
 #   gather_facts: false
 #   vars:
+#     f5_image: "BIGIP-15.1.10-0.0.3.iso"
+#     trusted_checksum: "{{lookup('file', '{{isos_dir}}/{{f5_image}}.md5').split(' ').0}}"
 #     new_volume: HD1.2
 #   roles:
-#     - roles/f5/reboot-to-new-volume
+#     - roles/f5/upload-install-update
+
+- name: BIG-IP reboot into new volume
+  hosts: lb
+  gather_facts: false
+  vars:
+    new_volume: HD1.2
+  roles:
+    - roles/f5/reboot-to-new-volume
 
 
 
