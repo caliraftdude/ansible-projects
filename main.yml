@@ -24,6 +24,15 @@
   roles:
     - roles/f5/save-config
 
+- name: BIG-IP Refresh license
+  hosts: lb
+  gather_facts: false
+
+  roles:
+    - roles/f5/refresh-license
+
+
+
 - name: "Get bigip final status of virtuals, pools, nodes, and routes"
   hosts: lb
   gather_facts: false
@@ -54,12 +63,7 @@
 
 
 
-# - name: BIG-IP Refresh license
-#   hosts: lb
-#   gather_facts: false
 
-#   roles:
-#     - roles/f5/refresh-license
 
 
 # - name: BIG-IP Upload, verify, and install image to device.  Prep for reboot.

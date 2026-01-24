@@ -7,10 +7,15 @@
   register: license_info
   delegate_to: localhost
 
+- name: "Display current license information"
+  debug:
+    msg: "Current license key is {{ license_info.license.registration_key }}"
+    msg: "Saved license key is {{ license_key }}"
+
 - name: Refresh license
   f5networks.f5_modules.bigip_device_license:
     provider: "{{provider}}"
-    license_key: "{{ license_info.license.registration_key }}"
+    license_key: "{{ license_key }}"
     accept_eula: true
     force: true
     state: latest
