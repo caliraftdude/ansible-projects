@@ -9,8 +9,8 @@
 
 - name: "Display current license information"
   debug:
-    msg: "Current license key is {{ license_info.license.registration_key }}"
-    msg: "Saved license key is {{ license_key }}"
+    - msg: "Current license key is {{ license_info.license.registration_key }}"
+    - msg: "Saved license key is {{ license_key }}"
 
 - name: Refresh license
   f5networks.f5_modules.bigip_device_license:
