@@ -1,7 +1,7 @@
 ---
 - name: Store iso md5 hash
   set_fact:
-    trusted_iso_md5: "{{ lookup('file', '{{isos_dir}}/{{f5_image}}').split(' ').0 }}"
+    trusted_iso_md5: "{{ lookup('file', '{{isos_dir}}/{{f5_image}}.md5').split(' ').0 }}"
 
 - name: Print iso md5 hash
   debug:
