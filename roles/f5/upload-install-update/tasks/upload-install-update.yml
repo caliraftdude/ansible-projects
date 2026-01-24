@@ -1,11 +1,7 @@
 ---
-- name: Store iso md5 hash
-  set_fact:
-    trusted_iso_md5: "{{ lookup('file', '{{isos_dir}}/{{f5_image}}.md5').split(' ').0 }}"
-
 - name: Print iso md5 hash
   debug:
-    msg: "{{ trusted_iso_md5 }}"
+    msg: "{{ trusted_checksum }}"
 
 - name: Upload image to device
   bigip_software_image:
@@ -26,8 +22,8 @@
   debug:
     msg: 
       - "calculated md5sum is {{ uploaded_iso_md5 }}"
-      - "trusted md5sum is {{ trusted_iso_md5 }}"
-  failed_when: uploaded_iso_md5 != trusted_iso_md5
+      - "trusted md5sum is {{ trusted_checksum }}"
+  failed_when: uploaded_iso_md5 != trusted_checksum
 
 - name: Ensure an existing image is installed in specified volume
   bigip_software_install:
