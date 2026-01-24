@@ -1,46 +1,61 @@
 ---
-# - name: "Get bigip initial status of virtuals, pools, nodes, and routes"
-#   hosts: lb
-#   gather_facts: false
-#   vars:
-#     # filename is built to hold the report name.  Its timestamped and designated with BEFORE which is used in comparison
-#     filename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-BEFORE.log"
+###############################################################################
+# 1-snapshot
+###############################################################################
+- name: "Get bigip initial status of virtuals, pools, nodes, and routes"
+  hosts: lb
+  gather_facts: false
+  vars:
+    # filename is built to hold the report name.  Its timestamped and designated with BEFORE which is used in comparison
+    filename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-BEFORE.log"
 
-#     # script_file is the script that is echoed on the device and ran to collect information
-#     script_file: "{{device_working_dir}}/data_collection_script.sh"
+    # script_file is the script that is echoed on the device and ran to collect information
+    script_file: "{{device_working_dir}}/data_collection_script.sh"
 
-#     # data_file is the out of the script file or the report.  Note this goes to a mounted directory in the EE!
-#     # Important: device_working_dir, and report_dir are defined in the hosts/inventory
-#     data_file: "{{device_working_dir}}/{{filename}}"
-#   roles:
-#     - roles/general/snapshot
+    # data_file is the out of the script file or the report.  Note this goes to a mounted directory in the EE!
+    # Important: device_working_dir, and report_dir are defined in the hosts/inventory
+    data_file: "{{device_working_dir}}/{{filename}}"
+  roles:
+    - roles/general/snapshot
 
-# - name: Create UCS/backup and save locally off-box
-#   hosts: lb
-#   #gather_facts: false
-#   vars:
-#     ucsfilename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-backup.ucs"
+###############################################################################
+# 2- Save config
+###############################################################################
+- name: Create UCS/backup and save locally off-box
+  hosts: lb
+  #gather_facts: false
+  vars:
+    ucsfilename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-backup.ucs"
 
-#   roles:
-#     - roles/f5/save-config
+  roles:
+    - roles/f5/save-config
 
-# - name: BIG-IP Refresh license
-#   hosts: lb
-#   gather_facts: false
+###############################################################################
+# 3- Refresh license
+###############################################################################
+- name: BIG-IP Refresh license
+  hosts: lb
+  gather_facts: false
 
-#   roles:
-#     - roles/f5/refresh-license
+  roles:
+    - roles/f5/refresh-license
 
-# - name: BIG-IP Upload, verify, and install image to device.  Prep for reboot.
-#   hosts: lb
-#   gather_facts: false
-#   vars:
-#     f5_image: "BIGIP-15.1.10-0.0.3.iso"
-#     trusted_checksum: "{{lookup('file', '{{isos_dir}}/{{f5_image}}.md5').split(' ').0}}"
-#     new_volume: HD1.2
-#   roles:
-#     - roles/f5/upload-install-update
+###############################################################################
+# 4- Upload and install update
+###############################################################################
+- name: BIG-IP Upload, verify, and install image to device.  Prep for reboot.
+  hosts: lb
+  gather_facts: false
+  vars:
+    f5_image: "BIGIP-15.1.10-0.0.3.iso"
+    trusted_checksum: "{{lookup('file', '{{isos_dir}}/{{f5_image}}.md5').split(' ').0}}"
+    new_volume: HD1.2
+  roles:
+    - roles/f5/upload-install-update
 
+###############################################################################
+# 5- Reboot to a new volume
+###############################################################################
 - name: BIG-IP reboot into new volume
   hosts: lb
   gather_facts: false
@@ -49,26 +64,30 @@
   roles:
     - roles/f5/reboot-to-new-volume
 
+###############################################################################
+# 6- Collect second snapshot
+###############################################################################
+- name: "Get bigip final status of virtuals, pools, nodes, and routes"
+  hosts: lb
+  gather_facts: false
+  vars:
+    # filename is built to hold the report name.  Its timestamped and designated with AFTER which is used in comparison
+    filename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-AFTER.log"
 
+    # script_file is the script that is echoed on the device and ran to collect information
+    script_file: "{{device_working_dir}}/data_collection_script.sh"
 
-# - name: "Get bigip final status of virtuals, pools, nodes, and routes"
-#   hosts: lb
-#   gather_facts: false
-#   vars:
-#     # filename is built to hold the report name.  Its timestamped and designated with AFTER which is used in comparison
-#     filename: "{{inventory_hostname}}-{{ lookup('pipe', 'date +%FT%H%MZ') }}-AFTER.log"
+    # data_file is the out of the script file or the report.  Note this goes to a mounted directory in the EE!
+    # Important: device_working_dir, and report_dir are defined in the hosts/inventory
+    data_file: "{{device_working_dir}}/{{filename}}"
+  roles:
+    - roles/general/snapshot
 
-#     # script_file is the script that is echoed on the device and ran to collect information
-#     script_file: "{{device_working_dir}}/data_collection_script.sh"
-
-#     # data_file is the out of the script file or the report.  Note this goes to a mounted directory in the EE!
-#     # Important: device_working_dir, and report_dir are defined in the hosts/inventory
-#     data_file: "{{device_working_dir}}/{{filename}}"
-#   roles:
-#     - roles/general/snapshot
-
-# - name: "Compare the two snapshots"
-#   hosts: lb
-#   gather_facts: false
-#   roles:
-#     - roles/general/compare-snapshot
+###############################################################################
+# 7- Compare snapshots
+###############################################################################
+- name: "Compare the two snapshots"
+  hosts: lb
+  gather_facts: false
+  roles:
+    - roles/general/compare-snapshot
