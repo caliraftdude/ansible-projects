@@ -1,39 +1,46 @@
 ---
-# This playbook has some regretable gynamatics but it does resolve.  There are some dependencies to note:
-# 1. trusted_checksum is set by looking at the mounted repo and looking for the images' md5 file.  This
-# means that when you upload an iso you HAVE to upload its requisite md5 file otherwise the checksum check
-# will fail and the playbook will throw as well.
-# 2. calc_checksum is generated on the target device.  It would be better if the return value from the 
-# previous task could be used to do this, but I had no luck getting that to work.  Some manipulation is 
-# also required to get just the checksum as with the md5 file.
-# 3. Print Checksums is not entirely necessary, but is nice to get an output that verifies the match or 
-# mismatch
+- name: Store iso md5 hash
+  set_fact:
+    trusted_iso_md5: "{{ lookup('file', '{{isos_dir}}/{{f5_image}}').split(' ').0 }}"
+
+- name: Print iso md5 hash
+  debug:
+    msg: "{{ trusted_iso_md5 }}"
 
 - name: Upload image to device
   bigip_software_image:
-    image: '{{repo_path}}/{{f5_image}}'
+    image: "{{isos_dir}}/{{f5_image}}"
     provider: "{{provider}}"
   delegate_to: localhost
 
 - name: Get checksum
-  bigip_command:
-    provider: "{{provider}}"
-    commands: 'run /util bash -c "md5sum /shared/images/{{f5_image}}"'
-  delegate_to: localhost
-  register: calc_checksum
-  failed_when: calc_checksum.stdout.0.split(' ').0 != trusted_checksum
+  shell: md5sum /shared/images/{{f5_image}}
+  register: checksum
+  failed_when: checksum.rc != 0
+
+- name: Store uploaded iso md5
+  set_fact:
+    uploaded_iso_md5: "{{ checksum.stdout.split(' ').0 }}" 
   
-- name: Print Checksums
+- name: Print and verify checksums
   debug:
     msg: 
-      - "calulated md5sum is {{calc_checksum.stdout.0.split(' ').0}}"
-      -  "trusted md5sum is {{trusted_checksum}}"
+      - "calculated md5sum is {{ uploaded_iso_md5 }}"
+      - "trusted md5sum is {{ trusted_iso_md5 }}"
+  failed_when: uploaded_iso_md5 != trusted_iso_md5
 
 - name: Ensure an existing image is installed in specified volume
   bigip_software_install:
-    image: '{{f5_image}}'
+    image: "{{f5_image}}"
     volume: "{{new_volume}}"
     state: installed
     provider: "{{provider}}"
   delegate_to: localhost
 
+- name: Activate the new image and reboot into that volume
+  bigip_software_install:
+    image: "{{f5_image}}"
+    volume: "{{new_volume}}"
+    state: activated
+    provider: "{{provider}}"
+  delegate_to: localhost
